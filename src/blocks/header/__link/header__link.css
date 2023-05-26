@@ -1,0 +1,12 @@
+.header__link {
+  padding: 0;
+  margin: 0;
+  font-style: normal;
+  font-weight: 400;
+  font-size: 18px;
+  line-height: 122%;
+  text-align: right;
+  color: white;
+  text-decoration: none;
+  cursor: pointer;
+}

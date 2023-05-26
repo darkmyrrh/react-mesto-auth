@@ -1,0 +1,29 @@
+.form__input {
+    margin: 30px auto 0;
+    padding: 0;
+    width: 83%;
+    border: none;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.2);
+    padding-bottom: 13px;
+    font-style: normal;
+    font-weight: 400;
+    font-size: 14px;
+    line-height: 121%;
+    
+}
+.form__input:last-of-type {    
+    margin-bottom: 10px;
+}
+
+.form__input:first-of-type {
+    margin-top: 54px;
+}
+
+@media screen and (max-width: 499px) {
+    .form__input {
+        width: 84%;
+    }
+    .form__input:first-of-type {
+        margin-top: 75px;
+    }
+}

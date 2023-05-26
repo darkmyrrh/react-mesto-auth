@@ -1,0 +1,21 @@
+.profile__edit-image {
+    margin: 0;
+    padding: 0;
+    background-image: url('../../../images/profile-edit.svg');
+    background-size: 26px 26px;
+    background-color: rgba(0, 0, 0, 0.8);
+    background-position: center;
+    background-repeat: no-repeat;
+    width: 120px;
+    height: 120px;
+    position: absolute;
+    top: 0;
+    left: 0;
+    opacity: 0;
+    z-index: 3;
+    transition: opacity 0.3s linear;
+}
+
+.profile__edit-image:hover {
+    opacity: 1;
+}

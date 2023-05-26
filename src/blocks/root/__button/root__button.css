@@ -1,0 +1,7 @@
+.root__button {
+    transition: opacity 0.3s linear;
+}
+
+.root__button:hover {
+    opacity: 0.6;
+}

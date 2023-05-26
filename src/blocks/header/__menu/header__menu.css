@@ -1,0 +1,23 @@
+.header__menu {
+  visibility: hidden;
+  margin: 0;
+  padding: 0;
+  margin-top: 6px;
+  background-image: url(../../../images/menu.svg);
+  background-position: center;
+  background-repeat: no-repeat;
+  width: 24px;
+  height: 18px;
+  background-size: 24px 3px;
+  background-color: black;
+  border: none;
+  border-top: 3px solid white;
+  border-bottom: 3px solid white;
+  align-self: start;
+}
+
+@media screen and (max-width: 575px) {
+  .header__menu {
+    visibility: visible;
+  }
+}

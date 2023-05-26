@@ -1,0 +1,18 @@
+.form__input-error {
+    display: block;
+    min-height: 32px;
+    padding: 0;
+    margin: 5px 36px -35px;
+    color: red;
+    font-style: normal;
+    font-weight: 400;
+    font-size: 12px;
+    line-height: 125%;
+    max-width: 358px;
+}
+
+@media screen and (max-width: 499px) {
+    .form__input-error_active {
+        max-width: 238px;
+    }
+}
