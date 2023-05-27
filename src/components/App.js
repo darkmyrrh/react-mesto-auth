@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { Route, Routes, Navigate, useNavigate, Link } from "react-router-dom";
+import { Route, Routes, useNavigate, Link } from "react-router-dom";
 import ProtectedRouteElement from "./ProtectedRoute";
 import Header from "./Header";
 import Main from "./Main";

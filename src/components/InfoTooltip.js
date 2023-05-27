@@ -4,8 +4,8 @@ import error from "../images/error.svg";
 
 function InfoToolTip({ isOpen, onClose, isSuccessful }) {
   usePopupClose(isOpen, onClose);
-  const Registered = "Вы успешно зарегистрировались!";
-  const Failed = "Что-то пошло не так! Попробуйте ещё раз.";
+  const successRegistrationMessage = "Вы успешно зарегистрировались!";
+  const failedRegistrationMessage = "Что-то пошло не так! Попробуйте ещё раз.";
 
   return (
     <section className={`popup ${isOpen ? "popup_opened" : ""}`}>
@@ -23,7 +23,7 @@ function InfoToolTip({ isOpen, onClose, isSuccessful }) {
             className="tooltip__image"
           />
           <h2 className="tooltip__title">
-            {isSuccessful ? Registered : Failed}
+            {isSuccessful ? successRegistrationMessage : failedRegistrationMessage}
           </h2>
         </div>
       </div>
