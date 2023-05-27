@@ -22,7 +22,7 @@ function ConfirmCardDeletePopup({
       isLoading={isLoading}
       onSubmit={handleSubmit}
       card={card}
-    ></PopupWithForm>
+    />
   );
 }
 

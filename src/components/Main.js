@@ -12,6 +12,15 @@ function Main({
   onCardDelete,
 }) {
   const currentUser = useContext(CurrentUserContext);
+  const cardsElements = cards.map((card) => (
+    <Card
+      key={card._id}
+      card={card}
+      onCardClick={onOpenImagePopup}
+      onCardDelete={onCardDelete}
+      onCardLike={onCardLike}
+    />
+  ));
 
   return (
     <main className="main">
@@ -48,15 +57,7 @@ function Main({
       </section>
       <section className="photo-grid">
         <ul className="elements">
-          {cards.map((card) => (
-            <Card
-              key={card._id}
-              card={card}
-              onCardClick={onOpenImagePopup}
-              onCardDelete={onCardDelete}
-              onCardLike={onCardLike}
-            />
-          ))}
+          {cardsElements}
         </ul>
       </section>
     </main>

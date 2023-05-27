@@ -23,5 +23,5 @@ export function usePopupClose(isOpen, closePopup) {
       document.removeEventListener("keydown", handleEscape);
       document.removeEventListener("mousedown", handleOverlay);
     };
-  }, [isOpen, closePopup]);
+  }, [isOpen]);
 }

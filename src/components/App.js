@@ -27,9 +27,13 @@ function App() {
   const [isImagePopupOpen, setIsImagePopupOpen] = useState(false);
   const [currentUser, setСurrentUser] = useState({});
   const [cards, setCards] = useState([]);
-  const [renderLoading, setRenderLoading] = useState(false);
+  const [renderUserUpdateLoading, setRenderUserUpdateLoading] = useState(false);
+  const [renderAvatarUpdateLoading, setRenderAvatarUpdateLoading] =
+    useState(false);
+  const [renderAddPlaceLoading, setRenderAddPlaceLoading] = useState(false);
+  const [renderCardDeleteLoading, setRenderCardDeleteLoading] = useState(false);
   const [loggedIn, setLoggedIn] = useState(false);
-  const [userData, setUserData] = useState({});
+  const [userEmail, setUserEmail] = useState("");
   const [isInfoToolTipOpen, setInfoToolTipOpen] = useState(false);
   const [isRegistrationSuccessful, setRegistrationSuccessful] = useState(false);
   const navigate = useNavigate();
@@ -41,9 +45,9 @@ function App() {
         .checkToken(jwt)
         .then((res) => {
           if (res) {
-            setUserData({ email: res.data.email });
+            setUserEmail(res.data.email);
             setLoggedIn(true);
-            navigate("/cards", { replace: true });
+            navigate("/", { replace: true });
           }
         })
         .catch((err) => {
@@ -51,9 +55,9 @@ function App() {
         });
     }
   };
-  const handleLogin = () => {
+  useEffect(() => {
     handleTokenCheck();
-  };
+  }, []);
 
   const handleRegister = (email, password) => {
     auth
@@ -69,30 +73,35 @@ function App() {
       });
   };
 
+  const handleLogin = (email, password) => {
+    if (!email || !password) {
+      return;
+    }
+    auth
+      .authorize(email, password)
+      .then((data) => {
+        if (data.token) {
+          localStorage.setItem("jwt", data.token);
+          setUserEmail(email);
+          setLoggedIn(true);
+          navigate("/", { replace: true });
+        }
+      })
+      .catch((err) => alert(err));
+  };
+
   const handleSignOut = () => {
     setLoggedIn(false);
-    localStorage.removeItem("token");
+    localStorage.removeItem("jwt");
     navigate("/signin", { replace: true });
   };
 
   useEffect(() => {
-    handleTokenCheck();
-  }, []);
-
-  useEffect(() => {
     if (loggedIn) {
-      api
-        .getUserDetails(currentUser)
-        .then((data) => {
-          setСurrentUser(data);
-        })
-        .catch((err) => {
-          alert(err);
-        });
-      api
-        .getInitialCards(cards)
-        .then((card) => {
-          setCards(card);
+      Promise.all([api.getUserDetails(), api.getInitialCards()])
+        .then(([userInfo, cards]) => {
+          setСurrentUser(userInfo);
+          setCards(cards);
         })
         .catch((err) => {
           alert(err);
@@ -101,23 +110,23 @@ function App() {
   }, [loggedIn]);
 
   function handleEditAvatarClick() {
-    setIsEditAvatarPopupOpen(!isEditAvatarPopupOpen);
+    setIsEditAvatarPopupOpen(true);
   }
   function handleEditProfileClick() {
-    setIsEditProfilePopupOpen(!isEditProfilePopupOpen);
+    setIsEditProfilePopupOpen(true);
   }
   function handleAddPlaceClick() {
-    setIsAddPlacePopupOpen(!isAddPlacePopupOpen);
+    setIsAddPlacePopupOpen(true);
   }
 
   function handleConfirmCardDelete(card) {
     setSelectedCard(card);
-    setIsConfirmCardDeletePopupOpen(!isConfirmCardDeletePopupOpen);
+    setIsConfirmCardDeletePopupOpen(true);
   }
 
   function handleCardClick(card) {
     setSelectedCard(card);
-    setIsImagePopupOpen(!isImagePopupOpen);
+    setIsImagePopupOpen(true);
   }
 
   function handleCardLike(card) {
@@ -157,7 +166,7 @@ function App() {
   }
 
   function handleUpdateUser(data) {
-    setRenderLoading(true);
+    setRenderUserUpdateLoading(true);
     api
       .changeUserDetails(data)
       .then((info) => {
@@ -168,12 +177,12 @@ function App() {
         alert(err);
       })
       .finally(() => {
-        setRenderLoading(false);
+        setRenderUserUpdateLoading(false);
       });
   }
 
   function handleUpdateAvatar(avatar) {
-    setRenderLoading(true);
+    setRenderAvatarUpdateLoading(true);
     api
       .changeUserAvatar(avatar)
       .then((data) => {
@@ -184,12 +193,12 @@ function App() {
         alert(err);
       })
       .finally(() => {
-        setRenderLoading(false);
+        setRenderAvatarUpdateLoading(false);
       });
   }
 
   function handleAddPlace(data) {
-    setRenderLoading(true);
+    setRenderAddPlaceLoading(true);
     api
       .addNewCard(data)
       .then((newCard) => {
@@ -200,12 +209,12 @@ function App() {
         alert(err);
       })
       .finally(() => {
-        setRenderLoading(false);
+        setRenderAddPlaceLoading(false);
       });
   }
 
   function handleCardDelete(card) {
-    setRenderLoading(true);
+    setRenderCardDeleteLoading(true);
     api
       .deleteCard(card._id)
       .then(() => {
@@ -220,7 +229,7 @@ function App() {
         alert(err);
       })
       .finally(() => {
-        setRenderLoading(false);
+        setRenderCardDeleteLoading(false);
       });
   }
 
@@ -228,16 +237,6 @@ function App() {
     <CurrentUserContext.Provider value={currentUser}>
       <div className="App">
         <Routes>
-          <Route
-            path="/"
-            element={
-              loggedIn ? (
-                <Navigate to="/cards" replace />
-              ) : (
-                <Navigate to="/signin" replace />
-              )
-            }
-          />
           <Route
             path="*"
             element={
@@ -278,7 +277,7 @@ function App() {
             }
           />
           <Route
-            path="/cards"
+            path="/"
             element={
               <ProtectedRouteElement
                 loggedIn={loggedIn}
@@ -286,7 +285,7 @@ function App() {
                   <>
                     <Header
                       loggedIn={loggedIn}
-                      email={userData.email}
+                      email={userEmail}
                       onSignOut={handleSignOut}
                     />
                     <Main
@@ -309,28 +308,28 @@ function App() {
           isOpen={isEditAvatarPopupOpen}
           onClose={closeAllPopups}
           onUpdateAvatar={handleUpdateAvatar}
-          isLoading={renderLoading}
+          isLoading={renderAvatarUpdateLoading}
         />
 
         <EditProfilePopup
           isOpen={isEditProfilePopupOpen}
           onClose={closeAllPopups}
           onUpdateUser={handleUpdateUser}
-          isLoading={renderLoading}
+          isLoading={renderUserUpdateLoading}
         />
 
         <AddPlacePopup
           isOpen={isAddPlacePopupOpen}
           onClose={closeAllPopups}
           onAddPlace={handleAddPlace}
-          isLoading={renderLoading}
+          isLoading={renderAddPlaceLoading}
         />
         <ConfirmCardDeletePopup
           isOpen={isConfirmCardDeletePopupOpen}
           onClose={closeAllPopups}
           onDeleteCard={handleCardDelete}
           card={selectedCard}
-          isLoading={renderLoading}
+          isLoading={renderCardDeleteLoading}
         />
 
         <ImagePopup
